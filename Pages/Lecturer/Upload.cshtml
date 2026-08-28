@@ -1,0 +1,48 @@
+@page
+@model AttendanceRegister.Pages.Lecturer.UploadModel
+@{ ViewData["Title"] = "Upload Attendance"; }
+
+<h1>Upload Past Attendance</h1>
+<p class="text-muted">
+    Upload an .xlsx spreadsheet with columns <code>Student Name</code>, <code>Student No</code>,
+    then one column per lecture date (header = date, cell = 1 for present / 0 for absent).
+</p>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <input asp-for="UploadFile" type="file" class="form-control" accept=".xlsx" />
+        <span asp-validation-for="UploadFile" class="text-danger"></span>
+        <div class="form-text">
+            Any Student No not already registered gets an account created automatically -
+            email <code>&lt;studentno&gt;@@student.uct.ac.za</code>, default password
+            <code>Student@@2026!</code>. Fine for coursework demo data, not for real students
+            (they should register themselves).
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload &amp; Import</button>
+</form>
+
+@if (Model.Summary is not null)
+{
+    <div class="alert alert-info mt-3">
+        <p><strong>Import complete.</strong></p>
+        <ul class="mb-0">
+            <li>Lectures created: @Model.Summary.LecturesCreated (matched existing: @Model.Summary.LecturesMatched)</li>
+            <li>Student accounts created: @Model.Summary.AccountsCreated</li>
+            <li>Attendance records created: @Model.Summary.RecordsCreated</li>
+            <li>Attendance records updated: @Model.Summary.RecordsUpdated</li>
+            <li>Rows skipped (student not registered): @Model.Summary.RowsSkipped</li>
+        </ul>
+    </div>
+    @if (Model.Summary.SkippedStudentNumbers.Any())
+    {
+        <details class="mt-2">
+            <summary>Skipped student numbers</summary>
+            <p>@string.Join(", ", Model.Summary.SkippedStudentNumbers)</p>
+        </details>
+    }
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

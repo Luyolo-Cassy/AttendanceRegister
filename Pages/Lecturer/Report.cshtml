@@ -1,0 +1,50 @@
+@page
+@model AttendanceRegister.Pages.Lecturer.ReportModel
+@{ ViewData["Title"] = "Attendance Report"; }
+
+<h1>Attendance per Lecture</h1>
+
+<canvas id="attendanceChart" style="max-height: 420px;"></canvas>
+
+<h3 class="mt-5">Students below 75% attendance</h3>
+<table class="table table-sm">
+    <thead><tr><th>Student</th><th>Student No</th><th>Attendance rate</th></tr></thead>
+    <tbody>
+    @foreach (var s in Model.AtRiskStudents)
+    {
+        <tr class="table-danger">
+            <td>@s.FullName</td>
+            <td>@s.StudentNumber</td>
+            <td>@s.Rate.ToString("0")%</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        const ctx = document.getElementById('attendanceChart');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Model.LabelsJson),
+                datasets: [{
+                    label: 'Present',
+                    data: @Html.Raw(Model.PresentCountsJson),
+                    backgroundColor: '#198754'
+                }, {
+                    label: 'Absent',
+                    data: @Html.Raw(Model.AbsentCountsJson),
+                    backgroundColor: '#dc3545'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true }
+                }
+            }
+        });
+    </script>
+}

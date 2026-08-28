@@ -1,0 +1,31 @@
+@page
+@model AttendanceRegister.Pages.Student.CheckInModel
+@{ ViewData["Title"] = "Check In"; }
+
+<h1>Check In</h1>
+<p class="text-muted">Enter the code your lecturer displayed in the lecture hall. Codes only work while attendance is open for that session.</p>
+
+<div class="row">
+    <div class="col-md-5">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Code" class="form-label">Check-in code</label>
+                <input asp-for="Code" class="form-control form-control-lg text-uppercase" autofocus maxlength="6" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Check In</button>
+        </form>
+    </div>
+</div>
+
+@if (Model.Result is not null)
+{
+    <div class="alert @(Model.Result.Success ? "alert-success" : "alert-danger") mt-3">
+        @Model.Result.Message
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,72 @@
+@page
+@model AttendanceRegister.Pages.Student.QueryModel
+@{ ViewData["Title"] = "Query Attendance"; }
+
+<h1>Query a Specific Attendance Record</h1>
+<p class="text-muted">Think a record is wrong? Look it up here, then use "Raise a query" to flag it for your lecturer.</p>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-auto">
+        <input type="text" id="lectureSearch" class="form-control" style="min-width: 320px;"
+               list="lectureOptionsList" placeholder="Search for a lecture by title or date..."
+               autocomplete="off" value="@Model.SelectedLectureLabel" />
+        <datalist id="lectureOptionsList">
+            @foreach (var item in Model.LectureOptions)
+            {
+                <option data-id="@item.Value" value="@item.Text"></option>
+            }
+        </datalist>
+        <input type="hidden" asp-for="LectureId" id="lectureIdHidden" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Look up</button>
+    </div>
+</form>
+
+@if (Model.SelectedRecord is not null)
+{
+    var r = Model.SelectedRecord;
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@r.Lecture?.Title - @r.Lecture?.Date</h5>
+            <p>Status: <span class="badge bg-@Model.BadgeColor(r.Status)">@r.Status</span></p>
+            <p>Recorded by: @r.RecordedBy at @r.RecordedAtUtc.ToLocalTime()</p>
+            @if (!string.IsNullOrWhiteSpace(r.Notes))
+            {
+                <p>Notes: @r.Notes</p>
+            }
+            <form method="post" asp-page-handler="RaiseQuery" asp-route-recordId="@r.Id">
+                <div class="mb-2">
+                    <label class="form-label">Message to your lecturer</label>
+                    <textarea name="message" class="form-control" rows="2" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-outline-danger btn-sm">Raise a query</button>
+            </form>
+        </div>
+    </div>
+}
+else if (Model.LectureId.HasValue)
+{
+    <div class="alert alert-warning">No attendance record found for that lecture - you may not have been marked yet.</div>
+}
+
+@section Scripts {
+    <script>
+        (function () {
+            var search = document.getElementById('lectureSearch');
+            var hiddenId = document.getElementById('lectureIdHidden');
+            var options = Array.from(document.querySelectorAll('#lectureOptionsList option'));
+            var form = search.closest('form');
+
+            search.addEventListener('input', function () {
+                var match = options.find(function (o) { return o.value === search.value; });
+                if (match) {
+                    hiddenId.value = match.dataset.id;
+                    form.requestSubmit();
+                } else {
+                    hiddenId.value = '';
+                }
+            });
+        })();
+    </script>
+}

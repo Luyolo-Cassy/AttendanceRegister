@@ -1,0 +1,26 @@
+@page "{id:int}"
+@model AttendanceRegister.Pages.Lecturer.EditModel
+@{ ViewData["Title"] = "Edit Attendance Record"; }
+
+<h1>Edit Attendance Record</h1>
+
+<div class="card" style="max-width: 500px;">
+    <div class="card-body">
+        <p><strong>Student:</strong> @Model.Record.Student?.FullName (@Model.Record.Student?.StudentNumber)</p>
+        <p><strong>Lecture:</strong> @Model.Record.Lecture?.Title - @Model.Record.Lecture?.Date</p>
+
+        <form method="post">
+            <input type="hidden" asp-for="Record.Id" />
+            <div class="mb-3">
+                <label asp-for="Record.Status" class="form-label"></label>
+                <select asp-for="Record.Status" class="form-select" asp-items="Html.GetEnumSelectList<AttendanceRegister.Models.AttendanceStatus>()"></select>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Record.Notes" class="form-label"></label>
+                <textarea asp-for="Record.Notes" class="form-control" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a class="btn btn-link" asp-page="/Lecturer/Index">Back to dashboard</a>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+<div id="chatWidget">
+    <button id="chatToggle" class="btn btn-primary rounded-circle" title="Ask for help">💬</button>
+    <div id="chatPanel" class="card d-none">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Assistant</span>
+            <button id="chatClose" class="btn-close btn-close-white" aria-label="Close"></button>
+        </div>
+        <div id="chatMessages" class="card-body"></div>
+        <div class="card-footer">
+            <form id="chatForm" class="d-flex gap-2">
+                <input id="chatInput" type="text" class="form-control form-control-sm" placeholder="Ask something..." autocomplete="off" />
+                <button type="submit" class="btn btn-primary btn-sm">Send</button>
+            </form>
+        </div>
+    </div>
+</div>

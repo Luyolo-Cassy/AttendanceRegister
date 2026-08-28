@@ -1,0 +1,14 @@
+Notifications = await _context.Notifications
+    .Where(n => n.StudentId == user.Id)
+    .OrderByDescending(n => n.SentAt)
+    .ToListAsync();
+
+    @foreach (var n in Model.Notifications)
+{
+    <div class="card mb-2">
+        <div class="card-body">
+            <small>@n.SentAt</small>
+            <p>@n.Message</p>
+        </div>
+    </div>
+}

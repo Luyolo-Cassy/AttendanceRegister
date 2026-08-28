@@ -1,0 +1,81 @@
+@page
+@model AttendanceRegister.Pages.Lecturer.LecturesModel
+@{ ViewData["Title"] = "Lectures"; }
+
+<h1>Lectures</h1>
+
+<div class="card mb-4">
+    <div class="card-header">Create a new lecture</div>
+    <div class="card-body">
+        <form method="post" asp-page-handler="Create" class="row g-2">
+            <div class="col-md-5">
+                <input asp-for="NewLecture.Title" class="form-control" placeholder="Title, e.g. Lecture 12 - Normalisation" />
+            </div>
+            <div class="col-md-3">
+                <input asp-for="NewLecture.Date" class="form-control" type="date" />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mb-3">
+    <input id="lectureSearch" class="form-control" placeholder="Search by title, date, or check-in code..." autocomplete="off" />
+</div>
+
+<table class="table">
+    <thead><tr><th>Date</th><th>Title</th><th>Check-in code</th><th>Attendance window</th><th>Present</th><th></th></tr></thead>
+    <tbody id="lectureRows">
+    @foreach (var l in Model.Lectures)
+    {
+        <tr data-search="@($"{l.Date} {l.Title} {l.CheckInCode}".ToLowerInvariant())">
+            <td>@l.Date</td>
+            <td>@l.Title</td>
+            <td><code class="fs-5">@l.CheckInCode</code></td>
+            <td>
+                @if (l.CheckInOpensAt.HasValue && l.CheckInClosesAt.HasValue)
+                {
+                    <span>@l.CheckInOpensAt.Value.ToLocalTime().ToString("HH:mm") - @l.CheckInClosesAt.Value.ToLocalTime().ToString("HH:mm")</span>
+                }
+                else
+                {
+                    <span class="text-muted">Not opened</span>
+                }
+            </td>
+            <td>@Model.PresentCounts.GetValueOrDefault(l.Id, 0)</td>
+            <td>
+                <form method="post" asp-page-handler="OpenWindow" asp-route-id="@l.Id" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-success">Open 15 min</button>
+                </form>
+                <form method="post" asp-page-handler="CloseWindow" asp-route-id="@l.Id" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Close</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<p id="lectureSearchEmpty" class="text-muted d-none">No lectures match your search.</p>
+
+@section Scripts {
+    <script>
+        (function () {
+            var input = document.getElementById('lectureSearch');
+            var rows = Array.from(document.querySelectorAll('#lectureRows tr'));
+            var empty = document.getElementById('lectureSearchEmpty');
+
+            input.addEventListener('input', function () {
+                var term = input.value.trim().toLowerCase();
+                var visibleCount = 0;
+                rows.forEach(function (row) {
+                    var match = row.dataset.search.includes(term);
+                    row.classList.toggle('d-none', !match);
+                    if (match) visibleCount++;
+                });
+                empty.classList.toggle('d-none', visibleCount > 0);
+            });
+        })();
+    </script>
+}

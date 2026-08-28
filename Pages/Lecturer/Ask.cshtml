@@ -1,0 +1,22 @@
+@page
+@model AttendanceRegister.Pages.Lecturer.AskModel
+@{ ViewData["Title"] = "Ask About Your Class"; }
+
+<h1>Ask About Your Class</h1>
+<p class="text-muted">Ask in plain English - "who missed the last two lectures", "who is below 60%", "how did attendance trend over the semester". The AI sees a summary of your actual data; nothing is invented.</p>
+
+<form method="post">
+    <div class="mb-3">
+        <textarea asp-for="Question" class="form-control" rows="2" placeholder="e.g. Which students have missed 3 or more lectures in a row?"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Ask</button>
+</form>
+
+@if (Model.Answer is not null)
+{
+    <div class="card mt-3">
+        <div class="card-body">
+            <p style="white-space: pre-wrap;">@Model.Answer</p>
+        </div>
+    </div>
+}

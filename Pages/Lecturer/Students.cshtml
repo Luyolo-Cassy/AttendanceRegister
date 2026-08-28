@@ -1,0 +1,25 @@
+@page
+@model AttendanceRegister.Pages.Lecturer.StudentsModel
+@{ ViewData["Title"] = "Students"; }
+
+<h1>Registered Students</h1>
+<p class="text-muted">Every account currently in the Student role. Use this to confirm a student number is registered before importing or troubleshooting a "missing history" report.</p>
+
+<table class="table table-striped">
+    <thead><tr><th>Full name</th><th>Email</th><th>Student No</th><th>Records</th></tr></thead>
+    <tbody>
+    @foreach (var s in Model.Students)
+    {
+        <tr>
+            <td>@s.FullName</td>
+            <td>@s.Email</td>
+            <td>@s.StudentNumber</td>
+            <td>@s.RecordCount</td>
+        </tr>
+    }
+    </tbody>
+</table>
+@if (!Model.Students.Any())
+{
+    <p class="text-muted">No students registered yet.</p>
+}

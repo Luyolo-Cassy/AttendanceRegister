@@ -1,0 +1,141 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+/* ---- Dark mode ---------------------------------------------------------
+   Toggled via data-bs-theme on <html> (Bootstrap 5.3's own dark mode
+   attribute), so Bootstrap's own components (navbar, cards, tables, forms)
+   repaint themselves for free. These overrides cover the few things
+   Bootstrap's dark mode doesn't touch on its own. */
+[data-bs-theme="dark"] body {
+  background-color: #121212;
+  color: #e8e8e8;
+}
+
+[data-bs-theme="dark"] .card {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+
+[data-bs-theme="dark"] .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #e8e8e8;
+  --bs-table-border-color: #333;
+}
+
+[data-bs-theme="dark"] .navbar.bg-white {
+  background-color: #1a1a1a !important;
+  border-bottom-color: #333 !important;
+}
+
+[data-bs-theme="dark"] .footer {
+  background-color: #1a1a1a;
+  border-top-color: #333 !important;
+}
+
+[data-bs-theme="dark"] .text-dark {
+  color: #e8e8e8 !important;
+}
+
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+  background-color: #1e1e1e;
+  color: #e8e8e8;
+  border-color: #444;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder {
+  color: #888;
+}
+
+[data-bs-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: #1a1a1a;
+  color: #e8e8e8;
+}
+
+[data-bs-theme="dark"] a {
+  color: #6ea8fe;
+}
+
+#themeToggle {
+  cursor: pointer;
+}
+
+/* ---- Chat widget --------------------------------------------------------- */
+#chatWidget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1050;
+}
+
+#chatToggle {
+  width: 56px;
+  height: 56px;
+  font-size: 1.4rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+#chatPanel {
+  position: absolute;
+  bottom: 66px;
+  right: 0;
+  width: 320px;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+#chatPanel .card-header {
+  background-color: #0d6efd;
+  color: white;
+}
+
+#chatMessages {
+  flex: 1;
+  overflow-y: auto;
+  font-size: 0.9rem;
+}
+
+.chat-msg {
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  max-width: 85%;
+  white-space: pre-wrap;
+}
+
+.chat-msg.user {
+  background-color: #0d6efd;
+  color: white;
+  margin-left: auto;
+}
+
+.chat-msg.assistant {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+[data-bs-theme="dark"] .chat-msg.assistant {
+  background-color: #2a2a2a;
+  color: #e8e8e8;
+}

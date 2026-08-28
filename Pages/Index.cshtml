@@ -1,0 +1,24 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center">
+    <h1 class="display-4">📋 INF3003W Attendance Register</h1>
+    <p class="lead">Digital sign-in for lectures - check in with a live code, no more paper sheets.</p>
+
+    @if (!User.Identity!.IsAuthenticated)
+    {
+        <a class="btn btn-primary btn-lg" asp-page="/Account/Register">Get started</a>
+        <a class="btn btn-outline-primary btn-lg" asp-page="/Account/Login">Log in</a>
+    }
+    else if (User.IsInRole("Student"))
+    {
+        <a class="btn btn-primary btn-lg" asp-page="/Student/Index">Go to dashboard</a>
+    }
+    else if (User.IsInRole("Lecturer"))
+    {
+        <a class="btn btn-primary btn-lg" asp-page="/Lecturer/Index">Go to dashboard</a>
+    }
+</div>

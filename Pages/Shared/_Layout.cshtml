@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Attendance Register</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AttendanceRegister.styles.css" asp-append-version="true" />
+    <script>
+        // Runs before the body paints so there's no flash of light mode on load.
+        (function () {
+            var saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">📋 Attendance Register</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        </li>
+                        @if (User.IsInRole("Student"))
+                        {
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Student/Index">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Student/CheckIn">Check In</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Student/History">History</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Student/Query">Query</a></li>
+                        }
+                        @if (User.IsInRole("Lecturer"))
+                        {
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Lecturer/Index">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Lecturer/Lectures">Lectures</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Lecturer/Students">Students</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Lecturer/Upload">Upload</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Lecturer/Report">Report</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Lecturer/AtRisk">At-Risk</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/Lecturer/Ask">Ask AI</a></li>
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                    <button id="themeToggle" class="btn btn-outline-secondary btn-sm ms-2" type="button" title="Toggle dark mode">🌙</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @if (TempData["StatusMessage"] is string status)
+            {
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    @status
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - Attendance Register - INF3003W
+        </div>
+    </footer>
+
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <partial name="_ChatWidget" />
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/chat-widget.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

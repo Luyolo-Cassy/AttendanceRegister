@@ -1,0 +1,71 @@
+@page
+@model AttendanceRegister.Pages.Student.IndexModel
+@{ ViewData["Title"] = "Student Dashboard"; }
+
+<h1>Welcome, @Model.FullName</h1>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-center @(Model.AttendancePercent < 75 ? "border-danger" : "border-success")">
+            <div class="card-body">
+                <h5 class="card-title">Attendance rate</h5>
+                <p class="display-5">@Model.AttendancePercent.ToString("0")%</p>
+                @if (Model.AttendancePercent < 75)
+                {
+                    <p class="text-danger mb-0">Below the 75% threshold - keep an eye on this.</p>
+                }
+                else
+                {
+                    <p class="text-success mb-0">You're on track.</p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Current streak</h5>
+                <p class="display-5">@Model.CurrentStreak</p>
+                <p class="text-muted mb-0">consecutive lectures present</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Lectures recorded</h5>
+                <p class="display-5">@Model.TotalRecorded</p>
+                <p class="text-muted mb-0">out of @Model.TotalLectures so far</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    @if (Model.OpenLecture is not null)
+    {
+        <div class="alert alert-success d-flex justify-content-between align-items-center">
+            <span>Attendance is currently open for <strong>@Model.OpenLecture.Title</strong> (@Model.OpenLecture.Date)</span>
+            <a class="btn btn-primary" asp-page="/Student/CheckIn">Check in now</a>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-secondary">No lecture has attendance open right now.</div>
+    }
+</div>
+
+<h3 class="mt-4">Recent attendance</h3>
+<table class="table table-sm">
+    <thead><tr><th>Date</th><th>Lecture</th><th>Status</th></tr></thead>
+    <tbody>
+    @foreach (var record in Model.RecentRecords)
+    {
+        <tr>
+            <td>@record.Lecture?.Date</td>
+            <td>@record.Lecture?.Title</td>
+            <td><span class="badge bg-@Model.BadgeColor(record.Status)">@record.Status</span></td>
+        </tr>
+    }
+    </tbody>
+</table>

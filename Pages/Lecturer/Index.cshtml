@@ -1,0 +1,55 @@
+@page
+@model AttendanceRegister.Pages.Lecturer.IndexModel
+@{ ViewData["Title"] = "Lecturer Dashboard"; }
+
+<h1>Lecturer Dashboard</h1>
+
+<div class="row mt-3">
+    <div class="col-md-3">
+        <div class="card text-center"><div class="card-body">
+            <h5 class="card-title">Lectures</h5><p class="display-6">@Model.TotalLectures</p>
+        </div></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center"><div class="card-body">
+            <h5 class="card-title">Students</h5><p class="display-6">@Model.TotalStudents</p>
+        </div></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center"><div class="card-body">
+            <h5 class="card-title">Avg attendance</h5><p class="display-6">@Model.AverageAttendance.ToString("0")%</p>
+        </div></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-danger"><div class="card-body">
+            <h5 class="card-title">At-risk students</h5><p class="display-6">@Model.AtRiskCount</p>
+            <p class="text-muted mb-0">below 75%</p>
+        </div></div>
+    </div>
+</div>
+
+<div class="mt-4 d-flex gap-2">
+    <a class="btn btn-primary" asp-page="/Lecturer/Lectures">Manage lectures</a>
+    <a class="btn btn-outline-primary" asp-page="/Lecturer/Upload">Upload past attendance</a>
+    <a class="btn btn-outline-primary" asp-page="/Lecturer/Report">View reports</a>
+</div>
+
+<h3 class="mt-4">Open queries</h3>
+<table class="table table-sm">
+    <thead><tr><th>Student</th><th>Lecture</th><th>Query</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var r in Model.QueriedRecords)
+    {
+        <tr>
+            <td>@r.Student?.FullName (@r.Student?.StudentNumber)</td>
+            <td>@r.Lecture?.Title - @r.Lecture?.Date</td>
+            <td>@r.Notes</td>
+            <td><a class="btn btn-sm btn-outline-secondary" asp-page="/Lecturer/Edit" asp-route-id="@r.Id">Resolve</a></td>
+        </tr>
+    }
+    </tbody>
+</table>
+@if (!Model.QueriedRecords.Any())
+{
+    <p class="text-muted">No open student queries.</p>
+}

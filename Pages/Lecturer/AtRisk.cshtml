@@ -1,0 +1,56 @@
+@page
+@model AttendanceRegister.Pages.Lecturer.AtRiskModel
+@{
+    ViewData["Title"] = "At-Risk Students";
+}
+
+@if (TempData["Success"] is string success)
+{
+    <div class="alert alert-success">
+        @success
+    </div>
+}
+
+<h1>At-Risk Students</h1>
+<p class="text-muted">Students below 75% attendance. Drafts are AI-generated from each student's actual pattern - read
+    them before sending anything; you know the context the AI doesn't.</p>
+
+    <form method="post" asp-page-handler="GenerateAll" class="mb-3">
+        <button type="submit" class="btn btn-primary" @(Model.Students.Any() ? "" : "disabled")>
+            Draft nudge messages for all @Model.Students.Count
+        </button>
+    </form>
+
+    @foreach (var s in Model.Students)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@s.FullName (@s.StudentNumber) - @s.Rate.ToString("0")% attendance</h5>
+                <p class="text-muted mb-2">@s.PatternSummary</p>
+
+                @if (Model.Drafts.TryGetValue(s.StudentId, out var draft))
+                {
+                    <form method="post" asp-page-handler="Send">
+                        <input type="hidden" name="studentId" value="@s.StudentId" />
+
+                        <textarea class="form-control mb-2" rows="5" name="message">@draft</textarea>
+
+                        <button type="submit" class="btn btn-success btn-sm">
+                            Send
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" asp-page-handler="GenerateOne" asp-route-studentId="@s.StudentId">
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Draft a message</button>
+                    </form>
+                }
+            </div>
+        </div>
+    }
+
+    @if (!Model.Students.Any())
+    {
+        <p class="text-muted">No students currently below 75%.</p>
+    }
